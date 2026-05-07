@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
+import android.net.Uri;
+import android.widget.ImageView;
 
 import com.example.lostandfoundapp.database.DatabaseHelper;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,8 @@ public class ItemDetailActivity extends AppCompatActivity {
     private TextView textViewDetailLocation;
     private TextView textViewDetailCategory;
 
+    private ImageView imageViewDetail;
+
     private Button buttonRemove;
     private DatabaseHelper databaseHelper;
     private int itemId;
@@ -31,6 +35,7 @@ public class ItemDetailActivity extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(this);
 
         // Connect views
+        imageViewDetail = findViewById(R.id.imageViewDetail);
         textViewDetailPostType = findViewById(R.id.textViewDetailPostType);
         textViewDetailName = findViewById(R.id.textViewDetailName);
         textViewDetailPhone = findViewById(R.id.textViewDetailPhone);
@@ -41,6 +46,7 @@ public class ItemDetailActivity extends AppCompatActivity {
         buttonRemove = findViewById(R.id.buttonRemove);
 
         // Get data from RecyclerView item
+        String imageUri = getIntent().getStringExtra("imageUri");
         String postType = getIntent().getStringExtra("postType");
         String name = getIntent().getStringExtra("name");
         String phone = getIntent().getStringExtra("phone");
@@ -57,6 +63,10 @@ public class ItemDetailActivity extends AppCompatActivity {
         textViewDetailDate.setText("Date: " + date);
         textViewDetailLocation.setText("Location: " + location);
         textViewDetailCategory.setText("Category: " + category);
+        // Show selected image if it exists
+        if (imageUri != null && !imageUri.isEmpty()) {
+            imageViewDetail.setImageURI(Uri.parse(imageUri));
+        }
 
         // Call removeItem() when 'REMOVE' button is clicked
         buttonRemove.setOnClickListener(v -> removeItem());

@@ -8,10 +8,17 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.net.Uri;
+import android.widget.ImageView;
+import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lostandfoundapp.database.DatabaseHelper;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
 
 
 public class AddItemActivity extends AppCompatActivity {
@@ -22,10 +29,13 @@ public class AddItemActivity extends AppCompatActivity {
     private Spinner spinnerCategory;
     private Button buttonSaveItem;
 
+    private Button buttonSelectImage;
+    private ImageView imagePreview;
+    private Uri selectedImageUri;
+    private ActivityResultLauncher<String[]> imagePickerLauncher;
+
     private DatabaseHelper databaseHelper;
 
-    // Temporary image value.
-    private String imageUri = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +53,34 @@ public class AddItemActivity extends AppCompatActivity {
         radioGroupPostType = findViewById(R.id.radioGroupPostType);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         buttonSaveItem = findViewById(R.id.buttonSaveItem);
+        buttonSelectImage = findViewById(R.id.buttonSelectImage);
+        imagePreview = findViewById(R.id.imagePreview);
 
         setupCategorySpinner();
+
+        // Open gallery and keep permission for the selected image
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.OpenDocument(),
+                uri -> {
+                    if (uri != null) {
+                        selectedImageUri = uri;
+
+                        // Keep permission to use this image later
+                        getContentResolver().takePersistableUriPermission(
+                                selectedImageUri,
+                                Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        );
+
+                        // Show selected image preview
+                        imagePreview.setImageURI(selectedImageUri);
+                    }
+                }
+        );
+
+        // open image picker when button is clicked
+        buttonSelectImage.setOnClickListener(v -> {
+            imagePickerLauncher.launch(new String[]{"image/*"});
+        });
 
         buttonSaveItem.setOnClickListener(v -> saveItem());
     }
@@ -83,6 +119,12 @@ public class AddItemActivity extends AppCompatActivity {
             return;
         }
 
+        // Check if image was selected
+        if (selectedImageUri == null) {
+            Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         boolean inserted = databaseHelper.insertItem(
                 postType,
                 name,
@@ -91,7 +133,7 @@ public class AddItemActivity extends AppCompatActivity {
                 date,
                 location,
                 category,
-                imageUri
+                selectedImageUri.toString()
         );
 
         if (inserted) {
