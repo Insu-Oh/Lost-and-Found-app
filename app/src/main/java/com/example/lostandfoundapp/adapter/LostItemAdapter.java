@@ -13,6 +13,9 @@ import com.example.lostandfoundapp.data.LostItem;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
+import com.example.lostandfoundapp.ItemDetailActivity;
+
 public class LostItemAdapter extends RecyclerView.Adapter<LostItemAdapter.ItemViewHolder> {
 
     private ArrayList<LostItem> itemList;
@@ -41,6 +44,24 @@ public class LostItemAdapter extends RecyclerView.Adapter<LostItemAdapter.ItemVi
         holder.textViewPostType.setText(item.getPostType());
         holder.textViewItemCategory.setText(item.getCategory());
         holder.textViewItemDate.setText(item.getDate());
+
+        // open detail screen when item is clicked
+        holder.itemView.setOnClickListener(v -> {
+
+            Intent intent = new Intent(v.getContext(), ItemDetailActivity.class);
+
+            intent.putExtra("id", item.getId());
+            intent.putExtra("postType", item.getPostType());
+            intent.putExtra("name", item.getName());
+            intent.putExtra("phone", item.getPhone());
+            intent.putExtra("description", item.getDescription());
+            intent.putExtra("date", item.getDate());
+            intent.putExtra("location", item.getLocation());
+            intent.putExtra("category", item.getCategory());
+            intent.putExtra("imageUri", item.getImageUri());
+
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
