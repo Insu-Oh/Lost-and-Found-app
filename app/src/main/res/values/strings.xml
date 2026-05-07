@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Lost and Found App</string>
+
+    <!--  Categories  -->
+    <string-array name="item_categories">
+        <item>Electronics</item>
+        <item>Pets</item>
+        <item>Wallets</item>
+        <item>Documents</item>
+        <item>Keys</item>
+        <item>Other</item>
+    </string-array>
 </resources>
