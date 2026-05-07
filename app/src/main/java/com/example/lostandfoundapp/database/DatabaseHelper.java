@@ -123,4 +123,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return itemList;
     }
+
+    // Delete an advert from the database by id
+    public boolean deleteItem(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int result = db.delete(
+                TABLE_ITEMS,
+                COLUMN_ID + " = ?",
+                new String[]{String.valueOf(id)}
+        );
+
+        db.close();
+
+        // If result is greater than 0, one item was deleted
+        return result > 0;
+    }
 }
