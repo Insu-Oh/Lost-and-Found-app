@@ -17,6 +17,8 @@ This project was developed for an Android mobile application development assessm
 - Remove adverts from the list
 - Filter adverts by category
 - Display advert date information
+- Map view with color markers (red=Lost, green=Found)
+- Radius-based filtering (5 km from user's current location)
 
 
 ## Technologies Used
@@ -27,3 +29,5 @@ This project was developed for an Android mobile application development assessm
 - RecyclerView
 - ConstraintLayout
 - Android Intents
+- Google Maps SDK for Android
+- Google Places SDK
