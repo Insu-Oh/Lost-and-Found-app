@@ -163,7 +163,7 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private void launchAutocomplete() {
-        // Only ask for the fields we need — Places API charges per field
+        // Only ask for the fields we need
         List<Place.Field> fields = Arrays.asList(
                 Place.Field.ID, Place.Field.NAME,
                 Place.Field.ADDRESS, Place.Field.LAT_LNG);

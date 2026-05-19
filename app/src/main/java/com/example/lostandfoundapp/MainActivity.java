@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.AdapterView;
+import android.widget.Button;
+
 
 import com.example.lostandfoundapp.adapter.LostItemAdapter;
 import com.example.lostandfoundapp.data.LostItem;
@@ -52,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
             startActivity(intent);
         });
+
+        Button btnShowOnMap = findViewById(R.id.buttonShowOnMap);
+        btnShowOnMap.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, MapActivity.class)));
 
         loadItems();
     }
