@@ -15,7 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database information
     private static final String DATABASE_NAME = "lost_found.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Table name
     public static final String TABLE_ITEMS = "lost_items";
@@ -30,6 +30,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_LOCATION = "location";
     public static final String COLUMN_CATEGORY = "category";
     public static final String COLUMN_IMAGE_URI = "image_uri";
+    public static final String COLUMN_LATITUDE = "latitude";
+    public static final String COLUMN_LONGITUDE = "longitude";
+
 
     // SQL query to create the lost_items table
     private static final String CREATE_TABLE_ITEMS =
@@ -42,7 +45,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_DATE + " TEXT, " +
                     COLUMN_LOCATION + " TEXT, " +
                     COLUMN_CATEGORY + " TEXT, " +
-                    COLUMN_IMAGE_URI + " TEXT" +
+                    COLUMN_IMAGE_URI + " TEXT, " +
+                    COLUMN_LATITUDE + " REAL DEFAULT 0, " +
+                    COLUMN_LONGITUDE + " REAL DEFAULT 0" +
                     ");";
 
     // Constructor
@@ -59,14 +64,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Runs when the database version changes
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ITEMS);
-        onCreate(db);
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE " + TABLE_ITEMS +
+                    " ADD COLUMN " + COLUMN_LATITUDE + " REAL DEFAULT 0");
+            db.execSQL("ALTER TABLE " + TABLE_ITEMS +
+                    " ADD COLUMN " + COLUMN_LONGITUDE + " REAL DEFAULT 0");
+        }
     }
 
     // Insert a new lost & found advert into the database
     public boolean insertItem(String postType, String name, String phone,
                               String description, String date, String location,
-                              String category, String imageUri) {
+                              String category, String imageUri,
+                              double latitude, double longitude) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -80,6 +90,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_LOCATION, location);
         values.put(COLUMN_CATEGORY, category);
         values.put(COLUMN_IMAGE_URI, imageUri);
+        values.put(COLUMN_LATITUDE, latitude);
+        values.put(COLUMN_LONGITUDE, longitude);
 
         long result = db.insert(TABLE_ITEMS, null, values);
         db.close();
@@ -112,6 +124,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 item.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOCATION)));
                 item.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY)));
                 item.setImageUri(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URI)));
+                item.setLatitude(cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_LATITUDE)));
+                item.setLongitude(cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_LONGITUDE)));
+
 
                 itemList.add(item);
 

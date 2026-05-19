@@ -13,6 +13,10 @@ public class LostItem {
     private String category;
     private String imageUri;
 
+    // map
+    private double latitude;
+    private double longitude;
+
     // Empty constructor
     public LostItem() {
     }
@@ -114,4 +118,11 @@ public class LostItem {
     public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
     }
+
+    public double getLatitude()  { return latitude; }
+    public void setLatitude(double latitude) {this.latitude = latitude;}
+
+    public double getLongitude() { return longitude; }
+    public void setLongitude(double longitude) { this.longitude = longitude; }
+
 }
